@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
+
+<script src="sweetalert2.all.min.js"></script>
+<script src="sweetalert2.min.js"></script>
+<link rel="stylesheet" href="sweetalert2.min.css">
+    <nav class="navbar custom-navbar navbar-expand-md navbar-light bg-primary sticky-top">
+        <div class="container">
+            <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse text-center" id="navbarSupportedContent">
+                <ul class="navbar-nav">                     
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Events
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'add-event' %}">Add Event</a> 
+                                {% comment %} <a class="dropdown-item" href="{% url 'payment' %}">Payment</a> {% endcomment %}
+                                {% comment %} <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a> {% endcomment %}
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Of Page Second Navigation -->
+    
+    <!-- page-header -->
+    <header class="page-header"></header>
+    <!-- end of page header -->
+
+    <div class="container">
+        <hr>
+        <div class="page-container text-center">
+            <div class="page-content text-center">
+                <hr>
+                {% if register %}
+                    <script>
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'event has been added successfully',
+                            showConfirmButton: false,
+                            timer: 3500
+                            })
+                    </script> 
+                {%  endif %}
+                {% for post in page_obj %}
+                {# note that the list of posts are in the page_obj.object_list not page_obj #}
+                {% if post.event_image %}
+                    <div class="blog-media">
+
+                        <img src="{{ post.event_image.url }}" alt="" class="w-100" width="500" height="600">
+                        {% comment %} <a href="#" class="badge badge-primary">#Placeat</a>         {% endcomment %}
+                    </div> 
+                {% endif %}
+                  <h5 class="card-title text-center">{{post.event_name}}</h5>  
+                  <small class="small text-muted">{{post.date}}
+                    <span class="px-2">-</span>{{post.time}}
+                    
+                    <p class="my-2">{{post.description}}</p>
+                    {% comment %} <a href="#" class="text-muted">34 Comments</a> {% endcomment %}
+                </small>
+                {% comment %} <div class="card-footer p-0 text-center"> {% endcomment %}
+                    {% comment %} <a href="single-post.html" class="btn btn-outline-dark btn-sm">READ MORE</a> {% endcomment %}
+                    {% comment %} {% if permission %}
+                    
+                        <a href="{% url 'deleted' post.id %}" class="btn btn-outline-dark btn-sm">Delete</a>
+                    {% endif %}
+                </div> {% endcomment %}
+        
+                  <hr/>
+
+                    {% endfor %}
+                    <div class="pagination text-center">
+                        <span class="step-links center">
+                            {% if page_obj.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                            {% endif %}
+                    
+                            <span class="current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+                    
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                                              
+                        </div>
+                    </div>
+                   
+            
+            </div>
+
+            
+        </div>
+    </div>
+
+    {% endblock %}
